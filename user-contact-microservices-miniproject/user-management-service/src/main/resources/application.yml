@@ -1,0 +1,33 @@
+server:
+  address: 127.0.0.1
+  port: 8192
+  
+spring:
+  application:
+    name: user-management-service
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultzone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+
+resilience4j.circuitbreaker:
+    instances:
+        config-mngmt:
+            registerHealthIndicator: true  #property through which resilience4j knows app is up 
+            slidingWindowSize: 5
+            permittedNumberOfCallsInHalfOpenState: 3
+            slidingWindowType: TIME_BASED
+            minimumNumberOfCalls: 5  
+            waitDurationInOpenState: 50s
+            failureRateThreshold: 50
+            eventConsumerBufferSize: 10
+            #recordFailurePredicate: io.github.robwin.exception.RecordFailurePredicate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
